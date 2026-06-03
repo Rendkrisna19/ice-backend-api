@@ -1,0 +1,1091 @@
+{
+  "info": {
+    "name": "ICE Backend API - Integrated Culinary Ecosystem",
+    "description": "Complete API documentation for testing the ICE backend system in Postman",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register Customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Customer\",\n  \"email\": \"newcustomer@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\",\n  \"role\": \"customer\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Request Register OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@email.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/auth/register/request-otp",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "auth", "register", "request-otp"]
+            }
+          }
+        },
+        {
+          "name": "Verify Register OTP & Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nama Lengkap\",\n  \"email\": \"user@email.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\",\n  \"phone\": \"08123456789\",\n  \"otp\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/auth/register/verify-otp",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "auth", "register", "verify-otp"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer1@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/auth/user",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "auth", "user"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "auth", "logout"]
+            }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nama Baru\",\n  \"email\": \"emailbaru@email.com\",\n  \"phone\": \"08123456789\",\n  \"password\": \"passwordbaru\",\n  \"password_confirmation\": \"passwordbaru\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/auth/profile/update",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "auth", "profile", "update"]
+            }
+          }
+        },
+        {
+          "name": "Upload/Update Profile Photo",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "profile_image",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/auth/profile/photo",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "auth", "profile", "photo"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Outlets",
+      "item": [
+        {
+          "name": "List All Outlets",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/v1/outlets",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "outlets"]
+            }
+          }
+        },
+        {
+          "name": "Get Outlet Details",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/v1/outlets/1",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "outlets", "1"]
+            }
+          }
+        },
+        {
+          "name": "Search Outlets",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/v1/outlets/search?q=Nusantara",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "outlets", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "Nusantara"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Outlet Products",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/v1/outlets/1/products",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "outlets", "1", "products"]
+            }
+          }
+        },
+        {
+          "name": "Upload Outlet Logo/Banner",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "type", "value": "logo", "type": "text" },
+                { "key": "image", "type": "file", "src": "" }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/outlets/1/media",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "outlets", "1", "media"]
+            }
+          }
+        },
+        {
+          "name": "Get Outlet Detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/outlets/1",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "outlets", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "List All Products",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/v1/products",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "products"]
+            }
+          }
+        },
+        {
+          "name": "Get Product Details",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/v1/products/1",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "products", "1"]
+            }
+          }
+        },
+        {
+          "name": "Search Products",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/v1/products/search?q=nasi",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "products", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "nasi"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Products by Category",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/v1/products/category?category=Makanan",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "products", "category"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "Makanan"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customer Orders",
+      "item": [
+        {
+          "name": "Validate Checkout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"outlet_id\": 1,\n  \"items\": [\n    {\n      \"product_id\": 1,\n      \"quantity\": 2\n    },\n    {\n      \"product_id\": 4,\n      \"quantity\": 1\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/customer/orders/validate-checkout",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "customer", "orders", "validate-checkout"]
+            }
+          }
+        },
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"outlet_id\": 1,\n  \"items\": [\n    {\n      \"product_id\": 1,\n      \"quantity\": 2,\n      \"variant_snap\": {\n        \"level\": \"pedas\",\n        \"notes\": \"tambah telur\"\n      }\n    },\n    {\n      \"product_id\": 4,\n      \"quantity\": 1\n    }\n  ],\n  \"delivery_address\": \"Jl. Sudirman No. 123, Jakarta\",\n  \"delivery_latitude\": -6.2088,\n  \"delivery_longitude\": 106.8456,\n  \"distance_real\": 2.5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/customer/orders",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "customer", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Get Customer Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/customer/orders",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "customer", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Get Order Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/customer/orders/1",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "customer", "orders", "1"]
+            }
+          }
+        },
+        {
+          "name": "Cancel Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/customer/orders/1/cancel",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "customer", "orders", "1", "cancel"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Merchant (Cashier) Orders",
+      "item": [
+        {
+          "name": "Get All Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cashier_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/merchant/orders",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "merchant", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Get Order Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cashier_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/merchant/orders/1",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "merchant", "orders", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Order Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cashier_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"preparing\"\n}\n\nNote: Use status: preparing, ready, or on_delivery"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/merchant/orders/1/status",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "merchant", "orders", "1", "status"]
+            }
+          }
+        },
+        {
+          "name": "Assign Driver",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cashier_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"driver_id\": 4\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/merchant/orders/1/assign-driver",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "merchant", "orders", "1", "assign-driver"]
+            }
+          }
+        },
+        {
+          "name": "Get Available Drivers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cashier_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/merchant/drivers/available",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "merchant", "drivers", "available"]
+            }
+          }
+        },
+        {
+          "name": "Toggle Menu Availability",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cashier_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product_id\": 1,\n  \"is_available\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/merchant/menu/toggle-availability",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "merchant", "menu", "toggle-availability"]
+            }
+          }
+        },
+        {
+          "name": "Get Outlet Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cashier_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/merchant/outlet/status",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "merchant", "outlet", "status"]
+            }
+          }
+        },
+        {
+          "name": "Force Close Outlet",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cashier_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/merchant/outlet/force-close",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "merchant", "outlet", "force-close"]
+            }
+          }
+        },
+        {
+          "name": "Force Open Outlet",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cashier_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/merchant/outlet/force-open",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "merchant", "outlet", "force-open"]
+            }
+          }
+        },
+        {
+          "name": "Reject Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{cashier_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/merchant/orders/1/reject",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "merchant", "orders", "1", "reject"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Driver Shift",
+      "item": [
+        {
+          "name": "Clock In",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driver_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/driver/shift/clock-in",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "driver", "shift", "clock-in"]
+            }
+          }
+        },
+        {
+          "name": "Clock Out",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driver_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/driver/shift/clock-out",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "driver", "shift", "clock-out"]
+            }
+          }
+        },
+        {
+          "name": "Get Assigned Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driver_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/driver/orders",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "driver", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Accept Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driver_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/driver/orders/1/accept",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "driver", "orders", "1", "accept"]
+            }
+          }
+        },
+        {
+          "name": "Mark Order as Paid",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driver_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/driver/orders/1/paid",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "driver", "orders", "1", "paid"]
+            }
+          }
+        },
+        {
+          "name": "Complete Delivery",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driver_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/driver/orders/1/complete",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "driver", "orders", "1", "complete"]
+            }
+          }
+        },
+        {
+          "name": "Get Driver Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driver_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/driver/status",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "driver", "status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin Management",
+      "item": [
+        {
+          "name": "Get Refund Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/admin/refunds",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "admin", "refunds"]
+            }
+          }
+        },
+        {
+          "name": "Process Refund",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refund_amount\": 50000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/admin/refunds/1/process",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "admin", "refunds", "1", "process"]
+            }
+          }
+        },
+        {
+          "name": "List Outlets",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/admin/outlets",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "admin", "outlets"]
+            }
+          }
+        },
+        {
+          "name": "Create Outlet",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Resto Baru\",\n  \"slug\": \"resto-baru\",\n  \"address\": \"Jl. Gatot Subroto No. 789\",\n  \"phone\": \"021-5555555\",\n  \"whatsapp_number\": \"628555555555\",\n  \"opening_hour\": \"10:00:00\",\n  \"closing_hour\": \"22:00:00\",\n  \"latitude\": -6.2307,\n  \"longitude\": 106.7881\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/admin/outlets",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "admin", "outlets"]
+            }
+          }
+        },
+        {
+          "name": "Update Outlet",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Resto Updated\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/admin/outlets/1",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "admin", "outlets", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Outlet",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/admin/outlets/1",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "admin", "outlets", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Pricing Config",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/admin/pricing",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "admin", "pricing"]
+            }
+          }
+        },
+        {
+          "name": "Update Pricing Config",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"delivery_base_price\": 6000,\n  \"delivery_base_distance\": 1.5,\n  \"delivery_price_per_km\": 2500,\n  \"tax_percentage\": 12\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/admin/pricing",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "admin", "pricing"]
+            }
+          }
+        },
+        {
+          "name": "Get Reporting",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/admin/reporting?outlet_id=1&start_date=2026-01-01&end_date=2026-01-31",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "admin", "reporting"],
+              "query": [
+                {
+                  "key": "outlet_id",
+                  "value": "1"
+                },
+                {
+                  "key": "start_date",
+                  "value": "2026-01-01"
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-01-31"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Merchant POS",
+      "item": [
+        {
+          "name": "Get POS Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{cashier_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/merchant/pos/products",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "merchant", "pos", "products"]
+            }
+          }
+        },
+        {
+          "name": "Create POS Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{cashier_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/merchant/pos/orders",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "merchant", "pos", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Complete POS Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{cashier_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/merchant/pos/orders/1/complete",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "merchant", "pos", "orders", "1", "complete"]
+            }
+          }
+        },
+        {
+          "name": "Get POS Configs",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{cashier_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/merchant/pos/configs",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "merchant", "pos", "configs"]
+            }
+          }
+        },
+        {
+          "name": "Get POS Active Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{cashier_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/merchant/pos/active-orders",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "merchant", "pos", "active-orders"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chat",
+      "item": [
+        {
+          "name": "Get Chat Messages",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/v1/chat/1",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "chat", "1"]
+            }
+          }
+        },
+        {
+          "name": "Send Chat Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transaction_id\": 1,\n  \"sender_id\": 2,\n  \"receiver_id\": 3,\n  \"message\": \"Halo dari Postman\",\n  \"sent_by\": \"customer\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/chat",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "chat"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "your_customer_token_here",
+      "type": "string"
+    },
+    {
+      "key": "cashier_token",
+      "value": "your_cashier_token_here",
+      "type": "string"
+    },
+    {
+      "key": "driver_token",
+      "value": "your_driver_token_here",
+      "type": "string"
+    },
+    {
+      "key": "admin_token",
+      "value": "your_admin_token_here",
+      "type": "string"
+    }
+  ]
+}
