@@ -158,8 +158,9 @@ class ProductController extends Controller
 
             // Handle Image Replacement saat Update
             if ($request->hasFile('image')) {
-                if ($product->image_url && !str_starts_with($product->image_url, 'http')) {
-                    $oldPath = str_replace('storage/', '', $product->image_url);
+                if ($product->getRawOriginal('image_url')) {
+                    $oldPath = $product->getRawOriginal('image_url');
+                    $oldPath = explode('storage/', $oldPath)[1] ?? $oldPath;
                     Storage::disk('public')->delete($oldPath);
                 }
                 $path = $request->file('image')->store('products', 'public');
@@ -195,8 +196,10 @@ class ProductController extends Controller
         $user = auth()->user();
         return DB::transaction(function () use ($product, $user) {
             // Hapus file gambar dari server
-            if ($product->image_url && !str_starts_with($product->image_url, 'http')) {
-                Storage::disk('public')->delete($product->image_url);
+            if ($product->getRawOriginal('image_url')) {
+                $path = $product->getRawOriginal('image_url');
+                $path = explode('storage/', $path)[1] ?? $path;
+                Storage::disk('public')->delete($path);
             }
 
             // Hapus relasi di outlet_product

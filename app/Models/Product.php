@@ -36,4 +36,26 @@ class Product extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    /**
+     * Otomatis memformat image_url agar selalu menggunakan URL production
+     * dan mengubah localhost menjadi URL yang benar saat diakses.
+     */
+    public function getImageUrlAttribute($value)
+    {
+        if (empty($value)) return $value;
+
+        // Jika value mengandung localhost, ganti dengan domain production
+        if (str_starts_with($value, 'http://localhost')) {
+            $value = str_replace('http://localhost:8000', 'https://linen-deer-529188.hostingersite.com', $value);
+            $value = str_replace('http://localhost', 'https://linen-deer-529188.hostingersite.com', $value);
+        }
+
+        // Jika value adalah relative path (contoh: storage/...), ubah menjadi full URL
+        if (str_starts_with($value, 'storage/')) {
+            return 'https://linen-deer-529188.hostingersite.com/' . $value;
+        }
+
+        return $value;
+    }
 }

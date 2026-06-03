@@ -764,9 +764,10 @@ class ManagementController extends Controller
 
         // 2. Handle Image Upload
         if ($request->hasFile('image')) {
-            if ($product->image_url) {
+            if ($product->getRawOriginal('image_url')) {
                 // Hapus gambar lama
-                $oldPath = str_replace(url('storage/'), '', $product->image_url);
+                $oldPath = $product->getRawOriginal('image_url');
+                $oldPath = explode('storage/', $oldPath)[1] ?? $oldPath;
                 Storage::disk('public')->delete($oldPath);
             }
             $path = $request->file('image')->store('products', 'public');
@@ -788,8 +789,9 @@ class ManagementController extends Controller
      */
     public function deleteProduct(Product $product)
     {
-        if ($product->image_url) {
-            $path = str_replace(url('storage/'), '', $product->image_url);
+        if ($product->getRawOriginal('image_url')) {
+            $path = $product->getRawOriginal('image_url');
+            $path = explode('storage/', $path)[1] ?? $path;
             Storage::disk('public')->delete($path);
         }
         
