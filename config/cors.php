@@ -18,6 +18,7 @@ return [
         'https://zadify.id',
         'https://app.zadify.id',
         'https://www.zadify.id',
+        'https://ice-web-suite.vercel.app',
     ],
 
     'allowed_origins_patterns' => [],
