@@ -925,6 +925,31 @@ class ManagementController extends Controller
     }
 
     /**
+     * Toggle Block/Unblock Customer
+     */
+    public function toggleBlockCustomer(User $user)
+    {
+        $admin = Auth::user();
+        if ($admin->role !== 'admin') {
+            return $this->errorResponse('Unauthorized', 403);
+        }
+
+        if ($user->role !== 'customer') {
+            return $this->errorResponse('User is not a customer', 400);
+        }
+
+        // Toggle status
+        $newStatus = ($user->status === 'blocked') ? 'active' : 'blocked';
+        $user->update(['status' => $newStatus]);
+
+        $message = $newStatus === 'blocked'
+            ? 'Pelanggan berhasil diblokir.'
+            : 'Pelanggan berhasil diaktifkan kembali.';
+
+        return $this->successResponse($user, $message);
+    }
+
+    /**
      * Delete Customer
      */
     public function deleteCustomer(User $user)

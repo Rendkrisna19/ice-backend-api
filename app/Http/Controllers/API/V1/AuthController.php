@@ -129,6 +129,11 @@ class AuthController extends Controller
             return $this->errorResponse('Email atau password Anda salah', 401);
         }
 
+        // Cek apakah akun diblokir
+        if ($user->status === 'blocked') {
+            return $this->errorResponse('Akun Anda telah diblokir. Silakan hubungi admin untuk informasi lebih lanjut.', 403);
+        }
+
         $token = $user->createToken('auth-token')->plainTextToken;
 
         return $this->successResponse([

@@ -164,6 +164,7 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 
         // Customers
         Route::get('/customers', [ManagementController::class, 'getCustomers']);
+        Route::post('/customers/{user}/toggle-block', [ManagementController::class, 'toggleBlockCustomer']);
         Route::delete('/customers/{user}', [ManagementController::class, 'deleteCustomer']);
         Route::get('/rejected-orders', [ManagementController::class, 'getRejectedOrders']);
     });

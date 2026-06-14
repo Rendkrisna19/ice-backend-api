@@ -33,6 +33,7 @@ class User extends Authenticatable
     'vehicle_type',
     'wallet_balance',
     'profile_image',
+    'status',
 ];
 
     /**
