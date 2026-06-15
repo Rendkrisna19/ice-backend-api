@@ -823,11 +823,25 @@ class ManagementController extends Controller
 
     public function getAllDrivers()
     {
-        // Ambil SEMUA driver, dan sertakan info outlet-nya
+        // Ambil SEMUA driver, sertakan info outlet dan hitung statistik
         $drivers = User::where('role', 'driver')
-            ->with('outlet') // Load relasi outlet biar tau dia kerja dimana
+            ->with('outlet')
+            ->withCount([
+                'deliveries as completed_deliveries' => function ($query) {
+                    $query->whereIn('status', ['delivered', 'completed']);
+                }
+            ])
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->get()
+            ->map(function ($driver) {
+                // Cast wallet_balance ke float agar tidak null
+                $driver->wallet_balance = (float) ($driver->wallet_balance ?? 0);
+                // Tambahkan profile_image URL full
+                if ($driver->profile_image) {
+                    $driver->profile_image = url('storage/' . $driver->profile_image);
+                }
+                return $driver;
+            });
 
         return $this->successResponse($drivers, 'All drivers retrieved successfully');
     }
@@ -868,12 +882,18 @@ class ManagementController extends Controller
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
             'email' => 'sometimes|email|unique:users,email,' . $driver->id,
-            'password' => 'nullable|string|min:6', // Password opsional saat edit
+            'password' => 'nullable|string|min:6',
+            'phone' => 'nullable|string|max:20',
+            'vehicle_type' => 'nullable|string|in:motor,mobil',
+            'plate_number' => 'nullable|string|max:20',
         ]);
 
         $data = [
             'name' => $validated['name'] ?? $driver->name,
             'email' => $validated['email'] ?? $driver->email,
+            'phone' => $validated['phone'] ?? $driver->phone,
+            'vehicle_type' => $validated['vehicle_type'] ?? $driver->vehicle_type,
+            'plate_number' => $validated['plate_number'] ?? $driver->plate_number,
         ];
 
         if (!empty($validated['password'])) {
@@ -881,6 +901,13 @@ class ManagementController extends Controller
         }
 
         $driver->update($data);
+
+        // Reload with outlet relation
+        $driver->load('outlet');
+        $driver->wallet_balance = (float) ($driver->wallet_balance ?? 0);
+        if ($driver->profile_image) {
+            $driver->profile_image = url('storage/' . $driver->profile_image);
+        }
 
         return $this->successResponse($driver, 'Driver account updated successfully');
     }

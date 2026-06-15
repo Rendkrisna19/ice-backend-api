@@ -1,0 +1,280 @@
+<mxfile host="app.diagrams.net" modified="2025-06-15T00:00:00.000Z" agent="draw.io" version="24.0.0">
+  <diagram name="ZadApps Class Diagram" id="class-diagram-zadapps-v2">
+    <mxGraphModel dx="2400" dy="2000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- ============ TITLE ============ -->
+        <mxCell id="title" value="&lt;font style=&#39;font-size:22px;&#39;&gt;&lt;b&gt;ZadApps — Class Diagram&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&#39;font-size:12px;color:#888;&#39;&gt;Ice Backend API &amp;amp; Ice Web Suite — Laravel + Next.js&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="480" y="-20" width="500" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- ============ USER (Core - Blue) ============ -->
+        <mxCell id="user_header" value="&lt;b&gt;User&lt;/b&gt;  &lt;font color=&#39;#ccc&#39;&gt;(users)&lt;/font&gt;" style="shape=mxgraph.uml25.class;align=center;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;fillColor=#1565C0;fontColor=#FFFFFF;strokeColor=#0D47A1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="40" width="290" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="user_attrs" value="&lt;div style=&#39;text-align:left;font-size:11px;padding:6px 10px;line-height:1.7;&#39;&gt;&lt;u&gt;+ id&lt;/u&gt;: bigint &lt;font color=&#39;#888&#39;&gt;PK&lt;/font&gt;&lt;br&gt;+ name: varchar(255)&lt;br&gt;+ email: varchar(255) &lt;font color=&#39;#888&#39;&gt;unique&lt;/font&gt;&lt;br&gt;+ password: varchar(255)&lt;br&gt;+ role: enum &lt;font color=&#39;#1565C0&#39;&gt;&#39;admin&#39;|&#39;cashier&#39;|&#39;driver&#39;|&#39;customer&#39;&lt;/font&gt;&lt;br&gt;+ status: enum &lt;font color=&#39;#1565C0&#39;&gt;&#39;active&#39;|&#39;blocked&#39;&lt;/font&gt;&lt;br&gt;+ outlet_id: bigint &lt;font color=&#39;#E65100&#39;&gt;FK→Outlet&lt;/font&gt; &lt;font color=&#39;#888&#39;&gt;nullable&lt;/font&gt;&lt;br&gt;+ is_online: boolean&lt;br&gt;+ is_busy: boolean&lt;br&gt;+ phone: varchar(20)&lt;br&gt;+ profile_image: varchar(255)&lt;br&gt;+ plate_number: varchar(20)&lt;br&gt;+ vehicle_type: varchar(20)&lt;br&gt;+ wallet_balance: decimal(15,2)&lt;br&gt;+ email_verified_at: timestamp&lt;br&gt;+ created_at / updated_at: timestamp&lt;/div&gt;" style="shape=mxgraph.uml25.class;align=left;whiteSpace=wrap;html=1;fontSize=11;fillColor=#E3F2FD;strokeColor=#1565C0;arcSize=0;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="60" y="80" width="290" height="280" as="geometry"/>
+        </mxCell>
+        <mxCell id="user_methods" value="&lt;div style=&#39;text-align:left;font-size:11px;padding:6px 10px;line-height:1.7;&#39;&gt;+ outlet(): BelongsTo → Outlet&lt;br&gt;+ orders(): HasMany → Order &lt;font color=&#39;#888&#39;&gt;(customer)&lt;/font&gt;&lt;br&gt;+ deliveries(): HasMany → Order &lt;font color=&#39;#888&#39;&gt;(driver)&lt;/font&gt;&lt;br&gt;+ clockIn(): Response&lt;br&gt;+ clockOut(): Response&lt;br&gt;+ getActiveJobs(): Collection&amp;lt;Order&amp;gt;&lt;br&gt;+ startDelivery(orderId): Order&lt;br&gt;+ completeDelivery(orderId, photo): Order&lt;br&gt;+ toggleBlock(): void&lt;br&gt;+ canBeBlocked(): bool&lt;/div&gt;" style="shape=mxgraph.uml25.class;align=left;whiteSpace=wrap;html=1;fontSize=11;fillColor=#BBDEFB;strokeColor=#1565C0;arcSize=0;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="60" y="360" width="290" height="175" as="geometry"/>
+        </mxCell>
+
+        <!-- ============ OUTLET (Green) ============ -->
+        <mxCell id="outlet_header" value="&lt;b&gt;Outlet&lt;/b&gt;  &lt;font color=&#39;#ccc&#39;&gt;(outlets)&lt;/font&gt;" style="shape=mxgraph.uml25.class;align=center;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;fillColor=#2E7D32;fontColor=#FFFFFF;strokeColor=#1B5E20;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="500" y="40" width="280" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="outlet_attrs" value="&lt;div style=&#39;text-align:left;font-size:11px;padding:6px 10px;line-height:1.7;&#39;&gt;&lt;u&gt;+ id&lt;/u&gt;: bigint &lt;font color=&#39;#888&#39;&gt;PK&lt;/font&gt;&lt;br&gt;+ name: varchar(255)&lt;br&gt;+ slug: varchar(255) &lt;font color=&#39;#888&#39;&gt;unique&lt;/font&gt;&lt;br&gt;+ address: text&lt;br&gt;+ latitude: decimal(10,8)&lt;br&gt;+ longitude: decimal(11,8)&lt;br&gt;+ phone: varchar(20)&lt;br&gt;+ whatsapp_number: varchar(20)&lt;br&gt;+ opening_hour: time&lt;br&gt;+ closing_hour: time&lt;br&gt;+ is_force_closed: boolean&lt;br&gt;+ logo: varchar(255)&lt;br&gt;+ banner: varchar(255)&lt;br&gt;+ created_at / updated_at: timestamp&lt;/div&gt;" style="shape=mxgraph.uml25.class;align=left;whiteSpace=wrap;html=1;fontSize=11;fillColor=#E8F5E9;strokeColor=#2E7D32;arcSize=0;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="500" y="80" width="280" height="245" as="geometry"/>
+        </mxCell>
+        <mxCell id="outlet_methods" value="&lt;div style=&#39;text-align:left;font-size:11px;padding:6px 10px;line-height:1.7;&#39;&gt;+ users(): HasMany → User &lt;font color=&#39;#888&#39;&gt;(1..*)&lt;/font&gt;&lt;br&gt;+ orders(): HasMany → Order &lt;font color=&#39;#888&#39;&gt;(1..*)&lt;/font&gt;&lt;br&gt;+ products(): BelongsToMany → Product &lt;font color=&#39;#888&#39;&gt;(M:N)&lt;/font&gt;&lt;br&gt;+ isOpen(): bool&lt;/div&gt;" style="shape=mxgraph.uml25.class;align=left;whiteSpace=wrap;html=1;fontSize=11;fillColor=#C8E6C9;strokeColor=#2E7D32;arcSize=0;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="500" y="325" width="280" height="95" as="geometry"/>
+        </mxCell>
+
+        <!-- ============ PRODUCT (Teal) ============ -->
+        <mxCell id="product_header" value="&lt;b&gt;Product&lt;/b&gt;  &lt;font color=&#39;#ccc&#39;&gt;(products)&lt;/font&gt;" style="shape=mxgraph.uml25.class;align=center;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;fillColor=#00796B;fontColor=#FFFFFF;strokeColor=#004D40;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="940" y="40" width="270" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="product_attrs" value="&lt;div style=&#39;text-align:left;font-size:11px;padding:6px 10px;line-height:1.7;&#39;&gt;&lt;u&gt;+ id&lt;/u&gt;: bigint &lt;font color=&#39;#888&#39;&gt;PK&lt;/font&gt;&lt;br&gt;+ name: varchar(255)&lt;br&gt;+ slug: varchar(255) &lt;font color=&#39;#888&#39;&gt;unique&lt;/font&gt;&lt;br&gt;+ description: text&lt;br&gt;+ price: decimal(12,2)&lt;br&gt;+ cost_price: decimal(12,2)&lt;br&gt;+ image_url: varchar(255)&lt;br&gt;+ category: enum &lt;font color=&#39;#00796B&#39;&gt;&#39;makanan&#39;|&#39;minuman&#39;&lt;/font&gt;&lt;br&gt;+ created_at / updated_at: timestamp&lt;/div&gt;" style="shape=mxgraph.uml25.class;align=left;whiteSpace=wrap;html=1;fontSize=11;fillColor=#E0F2F1;strokeColor=#00796B;arcSize=0;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="940" y="80" width="270" height="165" as="geometry"/>
+        </mxCell>
+        <mxCell id="product_methods" value="&lt;div style=&#39;text-align:left;font-size:11px;padding:6px 10px;line-height:1.7;&#39;&gt;+ outlets(): BelongsToMany → Outlet &lt;font color=&#39;#888&#39;&gt;(M:N)&lt;/font&gt;&lt;br&gt;+ orderItems(): HasMany → OrderItem &lt;font color=&#39;#888&#39;&gt;(1..*)&lt;/font&gt;&lt;br&gt;+ getImageUrlAttribute(): string&lt;/div&gt;" style="shape=mxgraph.uml25.class;align=left;whiteSpace=wrap;html=1;fontSize=11;fillColor=#B2DFDB;strokeColor=#00796B;arcSize=0;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="940" y="245" width="270" height="75" as="geometry"/>
+        </mxCell>
+
+        <!-- ============ OUTLET_PRODUCT (Pivot - Brown) ============ -->
+        <mxCell id="pivot_header" value="&lt;b&gt;OutletProduct&lt;/b&gt;  &lt;font color=&#39;#ccc&#39;&gt;(outlet_product)&lt;/font&gt;" style="shape=mxgraph.uml25.class;align=center;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;fillColor=#6D4C41;fontColor=#FFFFFF;strokeColor=#4E342E;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="700" y="480" width="270" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="pivot_attrs" value="&lt;div style=&#39;text-align:left;font-size:11px;padding:6px 10px;line-height:1.7;&#39;&gt;&lt;u&gt;+ id&lt;/u&gt;: bigint &lt;font color=&#39;#888&#39;&gt;PK&lt;/font&gt;&lt;br&gt;+ outlet_id: bigint &lt;font color=&#39;#2E7D32&#39;&gt;FK→Outlet&lt;/font&gt;&lt;br&gt;+ product_id: bigint &lt;font color=&#39;#00796B&#39;&gt;FK→Product&lt;/font&gt;&lt;br&gt;+ price: decimal(12,2) &lt;font color=&#39;#888&#39;&gt;nullable&lt;/font&gt;&lt;br&gt;+ is_available: boolean&lt;br&gt;+ created_at / updated_at: timestamp&lt;/div&gt;" style="shape=mxgraph.uml25.class;align=left;whiteSpace=wrap;html=1;fontSize=11;fillColor=#EFEBE9;strokeColor=#6D4C41;arcSize=0;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="700" y="520" width="270" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="pivot_methods" value="&lt;div style=&#39;text-align:left;font-size:11px;padding:6px 10px;line-height:1.7;&#39;&gt;+ outlet(): BelongsTo → Outlet&lt;br&gt;+ product(): BelongsTo → Product&lt;/div&gt;" style="shape=mxgraph.uml25.class;align=left;whiteSpace=wrap;html=1;fontSize=11;fillColor=#D7CCC8;strokeColor=#6D4C41;arcSize=0;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="700" y="650" width="270" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- ============ ORDER (Red/Orange) ============ -->
+        <mxCell id="order_header" value="&lt;b&gt;Order&lt;/b&gt;  &lt;font color=&#39;#ccc&#39;&gt;(orders)&lt;/font&gt;" style="shape=mxgraph.uml25.class;align=center;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;fillColor=#C62828;fontColor=#FFFFFF;strokeColor=#B71C1C;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="620" width="290" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="order_attrs" value="&lt;div style=&#39;text-align:left;font-size:11px;padding:6px 10px;line-height:1.7;&#39;&gt;&lt;u&gt;+ id&lt;/u&gt;: bigint &lt;font color=&#39;#888&#39;&gt;PK&lt;/font&gt;&lt;br&gt;+ order_number: varchar &lt;font color=&#39;#888&#39;&gt;unique&lt;/font&gt;&lt;br&gt;+ user_id: bigint &lt;font color=&#39;#1565C0&#39;&gt;FK→User&lt;/font&gt; &lt;font color=&#39;#888&#39;&gt;(customer)&lt;/font&gt;&lt;br&gt;+ outlet_id: bigint &lt;font color=&#39;#2E7D32&#39;&gt;FK→Outlet&lt;/font&gt;&lt;br&gt;+ driver_id: bigint &lt;font color=&#39;#1565C0&#39;&gt;FK→User&lt;/font&gt; &lt;font color=&#39;#888&#39;&gt;nullable&lt;/font&gt;&lt;br&gt;+ status: enum &lt;font color=&#39;#C62828&#39;&gt;&#39;pending&#39;|&#39;paid&#39;|&#39;preparing&#39;|&lt;br&gt;&amp;nbsp;&amp;nbsp;&#39;ready&#39;|&#39;on_delivery&#39;|&#39;delivered&#39;|&lt;br&gt;&amp;nbsp;&amp;nbsp;&#39;completed&#39;|&#39;cancelled&#39;|&#39;refund_needed&#39;|&#39;refunded&#39;&lt;/font&gt;&lt;br&gt;+ proof_of_delivery: varchar&lt;br&gt;+ subtotal: decimal(12,2)&lt;br&gt;+ tax: decimal(12,2)&lt;br&gt;+ delivery_fee: decimal(12,2)&lt;br&gt;+ total_price: decimal(12,2)&lt;br&gt;+ distance_real: decimal(10,2)&lt;br&gt;+ delivery_address: text&lt;br&gt;+ delivery_latitude: decimal(10,8)&lt;br&gt;+ delivery_longitude: decimal(11,8)&lt;br&gt;+ paid_at: timestamp&lt;br&gt;+ picked_up_at: timestamp&lt;br&gt;+ delivered_at: timestamp&lt;br&gt;+ completed_at: timestamp&lt;br&gt;+ created_at / updated_at: timestamp&lt;/div&gt;" style="shape=mxgraph.uml25.class;align=left;whiteSpace=wrap;html=1;fontSize=11;fillColor=#FFEBEE;strokeColor=#C62828;arcSize=0;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="60" y="660" width="290" height="390" as="geometry"/>
+        </mxCell>
+        <mxCell id="order_methods" value="&lt;div style=&#39;text-align:left;font-size:11px;padding:6px 10px;line-height:1.7;&#39;&gt;+ customer(): BelongsTo → User&lt;br&gt;+ outlet(): BelongsTo → Outlet&lt;br&gt;+ driver(): BelongsTo → User &lt;font color=&#39;#888&#39;&gt;nullable&lt;/font&gt;&lt;br&gt;+ items(): HasMany → OrderItem &lt;font color=&#39;#888&#39;&gt;(1..*)&lt;/font&gt;&lt;br&gt;+ chatMessages(): HasMany → ChatMessage &lt;font color=&#39;#888&#39;&gt;(1..*)&lt;/font&gt;&lt;br&gt;+ canBeCancelled(): bool&lt;br&gt;+ canReassignDriver(): bool&lt;/div&gt;" style="shape=mxgraph.uml25.class;align=left;whiteSpace=wrap;html=1;fontSize=11;fillColor=#FFCDD2;strokeColor=#C62828;arcSize=0;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="60" y="1050" width="290" height="130" as="geometry"/>
+        </mxCell>
+
+        <!-- ============ ORDER ITEM (Orange) ============ -->
+        <mxCell id="oi_header" value="&lt;b&gt;OrderItem&lt;/b&gt;  &lt;font color=&#39;#ccc&#39;&gt;(order_items)&lt;/font&gt;" style="shape=mxgraph.uml25.class;align=center;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;fillColor=#E65100;fontColor=#FFFFFF;strokeColor=#BF360C;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="500" y="620" width="270" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="oi_attrs" value="&lt;div style=&#39;text-align:left;font-size:11px;padding:6px 10px;line-height:1.7;&#39;&gt;&lt;u&gt;+ id&lt;/u&gt;: bigint &lt;font color=&#39;#888&#39;&gt;PK&lt;/font&gt;&lt;br&gt;+ order_id: bigint &lt;font color=&#39;#C62828&#39;&gt;FK→Order&lt;/font&gt;&lt;br&gt;+ product_id: bigint &lt;font color=&#39;#00796B&#39;&gt;FK→Product&lt;/font&gt;&lt;br&gt;+ quantity: int&lt;br&gt;+ product_name_snap: varchar&lt;br&gt;+ product_price_snap: decimal(12,2)&lt;br&gt;+ variant_snap: json &lt;font color=&#39;#888&#39;&gt;nullable&lt;/font&gt;&lt;br&gt;+ subtotal: decimal(12,2)&lt;br&gt;+ created_at / updated_at: timestamp&lt;/div&gt;" style="shape=mxgraph.uml25.class;align=left;whiteSpace=wrap;html=1;fontSize=11;fillColor=#FFF3E0;strokeColor=#E65100;arcSize=0;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="500" y="660" width="270" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="oi_methods" value="&lt;div style=&#39;text-align:left;font-size:11px;padding:6px 10px;line-height:1.7;&#39;&gt;+ order(): BelongsTo → Order&lt;br&gt;+ product(): BelongsTo → Product&lt;/div&gt;" style="shape=mxgraph.uml25.class;align=left;whiteSpace=wrap;html=1;fontSize=11;fillColor=#FFE0B2;strokeColor=#E65100;arcSize=0;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="500" y="830" width="270" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- ============ CHAT MESSAGE (Purple) ============ -->
+        <mxCell id="chat_header" value="&lt;b&gt;ChatMessage&lt;/b&gt;  &lt;font color=&#39;#ccc&#39;&gt;(chat_messages)&lt;/font&gt;" style="shape=mxgraph.uml25.class;align=center;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;fillColor=#6A1B9A;fontColor=#FFFFFF;strokeColor=#4A148C;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="940" y="620" width="270" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="chat_attrs" value="&lt;div style=&#39;text-align:left;font-size:11px;padding:6px 10px;line-height:1.7;&#39;&gt;&lt;u&gt;+ id&lt;/u&gt;: bigint &lt;font color=&#39;#888&#39;&gt;PK&lt;/font&gt;&lt;br&gt;+ transaction_id: bigint &lt;font color=&#39;#C62828&#39;&gt;FK→Order&lt;/font&gt;&lt;br&gt;+ sender_id: bigint &lt;font color=&#39;#1565C0&#39;&gt;FK→User&lt;/font&gt;&lt;br&gt;+ receiver_id: bigint &lt;font color=&#39;#1565C0&#39;&gt;FK→User&lt;/font&gt;&lt;br&gt;+ message: text&lt;br&gt;+ sent_by: enum &lt;font color=&#39;#6A1B9A&#39;&gt;&#39;customer&#39;|&#39;driver&#39;&lt;/font&gt;&lt;br&gt;+ created_at / updated_at: timestamp&lt;/div&gt;" style="shape=mxgraph.uml25.class;align=left;whiteSpace=wrap;html=1;fontSize=11;fillColor=#F3E5F5;strokeColor=#6A1B9A;arcSize=0;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="940" y="660" width="270" height="140" as="geometry"/>
+        </mxCell>
+        <mxCell id="chat_methods" value="&lt;div style=&#39;text-align:left;font-size:11px;padding:6px 10px;line-height:1.7;&#39;&gt;+ transaction(): BelongsTo → Order&lt;br&gt;+ sender(): BelongsTo → User&lt;br&gt;+ receiver(): BelongsTo → User&lt;/div&gt;" style="shape=mxgraph.uml25.class;align=left;whiteSpace=wrap;html=1;fontSize=11;fillColor=#E1BEE7;strokeColor=#6A1B9A;arcSize=0;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="940" y="800" width="270" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- ============ EMAIL OTP (Amber) ============ -->
+        <mxCell id="otp_header" value="&lt;b&gt;EmailOtp&lt;/b&gt;  &lt;font color=&#39;#ccc&#39;&gt;(email_otps)&lt;/font&gt;" style="shape=mxgraph.uml25.class;align=center;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;fillColor=#F57F17;fontColor=#FFFFFF;strokeColor=#E65100;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="500" y="960" width="270" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="otp_attrs" value="&lt;div style=&#39;text-align:left;font-size:11px;padding:6px 10px;line-height:1.7;&#39;&gt;&lt;u&gt;+ id&lt;/u&gt;: bigint &lt;font color=&#39;#888&#39;&gt;PK&lt;/font&gt;&lt;br&gt;+ email: varchar &lt;font color=&#39;#888&#39;&gt;unique&lt;/font&gt;&lt;br&gt;+ code_hash: varchar&lt;br&gt;+ expires_at: timestamp&lt;br&gt;+ created_at / updated_at: timestamp&lt;/div&gt;" style="shape=mxgraph.uml25.class;align=left;whiteSpace=wrap;html=1;fontSize=11;fillColor=#FFF8E1;strokeColor=#F57F17;arcSize=0;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="500" y="1000" width="270" height="105" as="geometry"/>
+        </mxCell>
+        <mxCell id="otp_methods" value="&lt;div style=&#39;text-align:left;font-size:11px;padding:6px 10px;line-height:1.7;&#39;&gt;+ isExpired(): bool&lt;br&gt;+ validateCode(code: string): bool&lt;/div&gt;" style="shape=mxgraph.uml25.class;align=left;whiteSpace=wrap;html=1;fontSize=11;fillColor=#FFECB3;strokeColor=#F57F17;arcSize=0;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="500" y="1105" width="270" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- ============ SYSTEM CONFIG (Gray) ============ -->
+        <mxCell id="config_header" value="&lt;b&gt;SystemConfig&lt;/b&gt;  &lt;font color=&#39;#ccc&#39;&gt;(system_configs)&lt;/font&gt;" style="shape=mxgraph.uml25.class;align=center;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;fillColor=#455A64;fontColor=#FFFFFF;strokeColor=#263238;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="940" y="960" width="270" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="config_attrs" value="&lt;div style=&#39;text-align:left;font-size:11px;padding:6px 10px;line-height:1.7;&#39;&gt;&lt;u&gt;+ id&lt;/u&gt;: bigint &lt;font color=&#39;#888&#39;&gt;PK&lt;/font&gt;&lt;br&gt;+ delivery_base_price: decimal(12,2)&lt;br&gt;+ delivery_base_distance: decimal(8,2)&lt;br&gt;+ delivery_price_per_km: decimal(12,2)&lt;br&gt;+ platform_fee: decimal(10,2)&lt;br&gt;+ tax_percentage: decimal(5,2)&lt;br&gt;+ created_at / updated_at: timestamp&lt;/div&gt;" style="shape=mxgraph.uml25.class;align=left;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ECEFF1;strokeColor=#455A64;arcSize=0;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="940" y="1000" width="270" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="config_methods" value="&lt;div style=&#39;text-align:left;font-size:11px;padding:6px 10px;line-height:1.7;&#39;&gt;+ getCurrent(): SystemConfig &lt;font color=&#39;#888&#39;&gt;(static)&lt;/font&gt;&lt;/div&gt;" style="shape=mxgraph.uml25.class;align=left;whiteSpace=wrap;html=1;fontSize=11;fillColor=#CFD8DC;strokeColor=#455A64;arcSize=0;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="940" y="1130" width="270" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- =================== RELATIONSHIPS WITH CARDINALITY =================== -->
+
+        <!-- 1. Outlet ──1──0..*──▶ User -->
+        <mxCell id="r1" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;exitX=0;exitY=0.3;exitDx=0;exitDy=0;entryX=1;entryY=0.1;entryDx=0;entryDy=0;strokeColor=#2E7D32;strokeWidth=2.5;endArrow=block;endFill=1;startArrow=diamondThin;startFill=1;startSize=12;" edge="1" parent="1" source="outlet_header" target="user_header">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="r1_label1" value="1" style="edgeLabel;html=1;fontSize=12;fontStyle=1;fontColor=#2E7D32;" vertex="1" connectable="0" parent="r1">
+          <mxGeometry x="0.1" y="1" relative="1" as="geometry"><mxPoint x="-10" y="-8" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="r1_label2" value="0..*" style="edgeLabel;html=1;fontSize=12;fontStyle=1;fontColor=#1565C0;" vertex="1" connectable="0" parent="r1">
+          <mxGeometry x="-0.8" y="1" relative="1" as="geometry"><mxPoint x="10" y="-8" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="r1_mid" value="memiliki" style="edgeLabel;html=1;fontSize=10;fontStyle=2;fontColor=#666;" vertex="1" connectable="0" parent="r1">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- 2. User ──1──0..*──▶ Order (customer) -->
+        <mxCell id="r2" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;exitX=0.3;exitY=1;exitDx=0;exitDy=0;entryX=0.3;entryY=0;entryDx=0;entryDy=0;strokeColor=#C62828;strokeWidth=2.5;endArrow=block;endFill=1;startArrow=diamondThin;startFill=1;startSize=12;" edge="1" parent="1" source="user_methods" target="order_header">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="r2_label1" value="1" style="edgeLabel;html=1;fontSize=12;fontStyle=1;fontColor=#1565C0;" vertex="1" connectable="0" parent="r2">
+          <mxGeometry x="0.1" y="1" relative="1" as="geometry"><mxPoint x="-14" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="r2_label2" value="0..*" style="edgeLabel;html=1;fontSize=12;fontStyle=1;fontColor=#C62828;" vertex="1" connectable="0" parent="r2">
+          <mxGeometry x="-0.8" y="1" relative="1" as="geometry"><mxPoint x="14" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="r2_mid" value="membeli (customer)" style="edgeLabel;html=1;fontSize=10;fontStyle=2;fontColor=#666;" vertex="1" connectable="0" parent="r2">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- 3. User ──1──0..*──▶ Order (driver, dashed) -->
+        <mxCell id="r3" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;exitX=0;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.15;entryDx=0;entryDy=0;strokeColor=#C62828;strokeWidth=2;dashed=1;dashPattern=8 4;endArrow=block;endFill=1;startArrow=diamondThin;startFill=1;startSize=12;" edge="1" parent="1" source="user_methods" target="order_header">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="10" y="483"/>
+              <mxPoint x="10" y="662"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r3_label1" value="1" style="edgeLabel;html=1;fontSize=12;fontStyle=1;fontColor=#1565C0;" vertex="1" connectable="0" parent="r3">
+          <mxGeometry x="0.1" y="1" relative="1" as="geometry"><mxPoint x="-12" y="-8" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="r3_label2" value="0..*" style="edgeLabel;html=1;fontSize=12;fontStyle=1;fontColor=#C62828;" vertex="1" connectable="0" parent="r3">
+          <mxGeometry x="-0.8" y="1" relative="1" as="geometry"><mxPoint x="12" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="r3_mid" value="mengantar (driver)" style="edgeLabel;html=1;fontSize=10;fontStyle=2;fontColor=#666;" vertex="1" connectable="0" parent="r3">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- 4. Outlet ──1──0..*──▶ Order -->
+        <mxCell id="r4" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.7;entryY=0;entryDx=0;entryDy=0;strokeColor=#C62828;strokeWidth=2.5;endArrow=block;endFill=1;startArrow=diamondThin;startFill=1;startSize=12;" edge="1" parent="1" source="outlet_methods" target="order_header">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="r4_label1" value="1" style="edgeLabel;html=1;fontSize=12;fontStyle=1;fontColor=#2E7D32;" vertex="1" connectable="0" parent="r4">
+          <mxGeometry x="0.1" y="1" relative="1" as="geometry"><mxPoint x="-14" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="r4_label2" value="0..*" style="edgeLabel;html=1;fontSize=12;fontStyle=1;fontColor=#C62828;" vertex="1" connectable="0" parent="r4">
+          <mxGeometry x="-0.8" y="1" relative="1" as="geometry"><mxPoint x="14" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="r4_mid" value="menerima" style="edgeLabel;html=1;fontSize=10;fontStyle=2;fontColor=#666;" vertex="1" connectable="0" parent="r4">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- 5. Order ──1──1..*──▶ OrderItem -->
+        <mxCell id="r5" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.2;exitDx=0;exitDy=0;entryX=0;entryY=0.2;entryDx=0;entryDy=0;strokeColor=#E65100;strokeWidth=2.5;endArrow=block;endFill=1;startArrow=diamondThin;startFill=1;startSize=12;" edge="1" parent="1" source="order_header" target="oi_header">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="r5_label1" value="1" style="edgeLabel;html=1;fontSize=12;fontStyle=1;fontColor=#C62828;" vertex="1" connectable="0" parent="r5">
+          <mxGeometry x="0.1" y="1" relative="1" as="geometry"><mxPoint x="-10" y="-8" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="r5_label2" value="1..*" style="edgeLabel;html=1;fontSize=12;fontStyle=1;fontColor=#E65100;" vertex="1" connectable="0" parent="r5">
+          <mxGeometry x="-0.8" y="1" relative="1" as="geometry"><mxPoint x="10" y="-8" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="r5_mid" value="berisi" style="edgeLabel;html=1;fontSize=10;fontStyle=2;fontColor=#666;" vertex="1" connectable="0" parent="r5">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- 6. Product ──0..*──1──▶ OrderItem -->
+        <mxCell id="r6" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#E65100;strokeWidth=2.5;endArrow=block;endFill=1;startArrow=block;startFill=0;startSize=12;" edge="1" parent="1" source="product_methods" target="oi_header">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="r6_label1" value="0..*" style="edgeLabel;html=1;fontSize=12;fontStyle=1;fontColor=#00796B;" vertex="1" connectable="0" parent="r6">
+          <mxGeometry x="0.1" y="1" relative="1" as="geometry"><mxPoint x="-14" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="r6_label2" value="1" style="edgeLabel;html=1;fontSize=12;fontStyle=1;fontColor=#E65100;" vertex="1" connectable="0" parent="r6">
+          <mxGeometry x="-0.8" y="1" relative="1" as="geometry"><mxPoint x="14" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="r6_mid" value="direferensikan" style="edgeLabel;html=1;fontSize=10;fontStyle=2;fontColor=#666;" vertex="1" connectable="0" parent="r6">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- 7. Order ──1──0..*──▶ ChatMessage -->
+        <mxCell id="r7" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;strokeColor=#6A1B9A;strokeWidth=2.5;endArrow=block;endFill=1;startArrow=diamondThin;startFill=1;startSize=12;" edge="1" parent="1" source="order_header" target="chat_header">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="420" y="820"/>
+              <mxPoint x="420" y="930"/>
+              <mxPoint x="890" y="930"/>
+              <mxPoint x="890" y="672"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r7_label1" value="1" style="edgeLabel;html=1;fontSize=12;fontStyle=1;fontColor=#C62828;" vertex="1" connectable="0" parent="r7">
+          <mxGeometry x="0.1" y="1" relative="1" as="geometry"><mxPoint x="-10" y="-8" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="r7_label2" value="0..*" style="edgeLabel;html=1;fontSize=12;fontStyle=1;fontColor=#6A1B9A;" vertex="1" connectable="0" parent="r7">
+          <mxGeometry x="-0.8" y="1" relative="1" as="geometry"><mxPoint x="10" y="-8" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="r7_mid" value="chat pada order" style="edgeLabel;html=1;fontSize=10;fontStyle=2;fontColor=#666;" vertex="1" connectable="0" parent="r7">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- 8. User ──0..*──1──▶ ChatMessage (sender) -->
+        <mxCell id="r8" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;strokeColor=#6A1B9A;strokeWidth=2;endArrow=block;endFill=1;startArrow=block;startFill=0;startSize=12;" edge="1" parent="1" source="user_header" target="chat_header">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="400" y="130"/>
+              <mxPoint x="400" y="590"/>
+              <mxPoint x="920" y="590"/>
+              <mxPoint x="920" y="620"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r8_label1" value="0..*" style="edgeLabel;html=1;fontSize=12;fontStyle=1;fontColor=#1565C0;" vertex="1" connectable="0" parent="r8">
+          <mxGeometry x="0.1" y="1" relative="1" as="geometry"><mxPoint x="-10" y="-8" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="r8_label2" value="0..*" style="edgeLabel;html=1;fontSize=12;fontStyle=1;fontColor=#6A1B9A;" vertex="1" connectable="0" parent="r8">
+          <mxGeometry x="-0.8" y="1" relative="1" as="geometry"><mxPoint x="10" y="-8" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="r8_mid" value="mengirim / menerima" style="edgeLabel;html=1;fontSize=10;fontStyle=2;fontColor=#666;" vertex="1" connectable="0" parent="r8">
+          <mxGeometry relative="1" as="geometry"><mxPoint as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- 9. Outlet ──1──0..*──▶ OutletProduct -->
+        <mxCell id="r9" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;exitX=0.8;exitY=1;exitDx=0;exitDy=0;entryX=0.3;entryY=0;entryDx=0;entryDy=0;strokeColor=#6D4C41;strokeWidth=2.5;endArrow=block;endFill=1;startArrow=diamondThin;startFill=1;startSize=12;" edge="1" parent="1" source="outlet_methods" target="pivot_header">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="r9_label1" value="1" style="edgeLabel;html=1;fontSize=12;fontStyle=1;fontColor=#2E7D32;" vertex="1" connectable="0" parent="r9">
+          <mxGeometry x="0.1" y="1" relative="1" as="geometry"><mxPoint x="-14" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="r9_label2" value="0..*" style="edgeLabel;html=1;fontSize=12;fontStyle=1;fontColor=#6D4C41;" vertex="1" connectable="0" parent="r9">
+          <mxGeometry x="-0.8" y="1" relative="1" as="geometry"><mxPoint x="14" as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- 10. Product ──1──0..*──▶ OutletProduct -->
+        <mxCell id="r10" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.8;entryY=0;entryDx=0;entryDy=0;strokeColor=#6D4C41;strokeWidth=2.5;endArrow=block;endFill=1;startArrow=diamondThin;startFill=1;startSize=12;" edge="1" parent="1" source="product_methods" target="pivot_header">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1075" y="380"/>
+              <mxPoint x="916" y="380"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r10_label1" value="1" style="edgeLabel;html=1;fontSize=12;fontStyle=1;fontColor=#00796B;" vertex="1" connectable="0" parent="r10">
+          <mxGeometry x="0.1" y="1" relative="1" as="geometry"><mxPoint x="-14" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="r10_label2" value="0..*" style="edgeLabel;html=1;fontSize=12;fontStyle=1;fontColor=#6D4C41;" vertex="1" connectable="0" parent="r10">
+          <mxGeometry x="-0.8" y="1" relative="1" as="geometry"><mxPoint x="14" as="offset"/></mxGeometry>
+        </mxCell>
+
+        <!-- =================== LEGEND =================== -->
+        <mxCell id="legend" value="&lt;div style=&#39;text-align:left;padding:12px;font-size:11px;line-height:1.8;&#39;&gt;&lt;b style=&#39;font-size:14px;&#39;&gt;Keterangan&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;Cardinality:&lt;/b&gt;&lt;br&gt;◆━━ &amp;nbsp; One (1) &lt;font color=&#39;#888&#39;&gt;(filled diamond)&lt;/font&gt;&lt;br&gt;━━▶ &amp;nbsp; Many (0..* / 1..*)&lt;br&gt;◆- -▶ &amp;nbsp; Optional (nullable)&lt;br&gt;&lt;br&gt;&lt;b&gt;Warna Entity:&lt;/b&gt;&lt;br&gt;&lt;font color=&#39;#1565C0&#39;&gt;■&lt;/font&gt; &lt;b&gt;Biru&lt;/b&gt; = User (Semua Role)&lt;br&gt;&lt;font color=&#39;#2E7D32&#39;&gt;■&lt;/font&gt; &lt;b&gt;Hijau&lt;/b&gt; = Outlet (Merchant)&lt;br&gt;&lt;font color=&#39;#00796B&#39;&gt;■&lt;/font&gt; &lt;b&gt;Teal&lt;/b&gt; = Product (Master Menu)&lt;br&gt;&lt;font color=&#39;#C62828&#39;&gt;■&lt;/font&gt; &lt;b&gt;Merah&lt;/b&gt; = Order (Pesanan)&lt;br&gt;&lt;font color=&#39;#E65100&#39;&gt;■&lt;/font&gt; &lt;b&gt;Orange&lt;/b&gt; = OrderItem (Detail)&lt;br&gt;&lt;font color=&#39;#6A1B9A&#39;&gt;■&lt;/font&gt; &lt;b&gt;Ungu&lt;/b&gt; = ChatMessage (Komunikasi)&lt;br&gt;&lt;font color=&#39;#F57F17&#39;&gt;■&lt;/font&gt; &lt;b&gt;Kuning&lt;/b&gt; = EmailOtp (Autentikasi)&lt;br&gt;&lt;font color=&#39;#455A64&#39;&gt;■&lt;/font&gt; &lt;b&gt;Abu&lt;/b&gt; = SystemConfig (Konfigurasi)&lt;br&gt;&lt;font color=&#39;#6D4C41&#39;&gt;■&lt;/font&gt; &lt;b&gt;Coklat&lt;/b&gt; = Pivot Table (M:N)&lt;/div&gt;" style="shape=mxgraph.uml25.class;align=left;whiteSpace=wrap;html=1;fontSize=11;fillColor=#FAFAFA;strokeColor=#BDBDBD;arcSize=8;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="60" y="1230" width="260" height="380" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
