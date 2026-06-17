@@ -146,7 +146,7 @@ class PosController extends Controller
             return response()->json([
                 'status'  => 'success',
                 'message' => 'Pesanan berhasil dikirim ke dapur',
-                'data'    => $order
+                'data'    => $order->load('items')
             ]);
         });
     }

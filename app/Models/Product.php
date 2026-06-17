@@ -45,15 +45,9 @@ class Product extends Model
     {
         if (empty($value)) return $value;
 
-        // Jika value mengandung localhost, ganti dengan domain production
-        if (str_starts_with($value, 'http://localhost')) {
-            $value = str_replace('http://localhost:8000', 'https://linen-deer-529188.hostingersite.com', $value);
-            $value = str_replace('http://localhost', 'https://linen-deer-529188.hostingersite.com', $value);
-        }
-
-        // Jika value adalah relative path (contoh: storage/...), ubah menjadi full URL
+        // Jika value adalah relative path (contoh: storage/...), ubah menjadi full URL berdasarkan APP_URL
         if (str_starts_with($value, 'storage/')) {
-            return 'https://linen-deer-529188.hostingersite.com/' . $value;
+            return url($value);
         }
 
         return $value;

@@ -15,9 +15,7 @@ class ReportController extends Controller
 
     private function getReportData($date, $outlet_id)
     {
-        // Exclude POS orders
         $baseQuery = Order::where('outlet_id', $outlet_id)
-            ->where('order_number', 'not like', 'POS-%')
             ->whereDate('created_at', $date);
 
         $totalOrders = (clone $baseQuery)->count();
@@ -29,6 +27,7 @@ class ReportController extends Controller
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(function ($order) {
+                $isPosOrder = str_starts_with($order->order_number ?? '', 'POS-');
                 $modal = 0;
                 $summary = $order->items->map(function ($item) use (&$modal) {
                     $name = $item->product_name_snap ?? $item->name ?? 'Produk';
@@ -38,22 +37,31 @@ class ReportController extends Controller
                     return $name . ' x' . $qty;
                 })->implode(', ');
 
-                $revenue = $order->subtotal; // Pendapatan kotor merchant (tanpa ongkir dan admin)
+                $revenue = $order->subtotal;
                 $netProfit = $revenue - $modal;
+
+                // POS orders: nama pelanggan ada di delivery_address, bukan di relasi customer
+                $customerName = $isPosOrder
+                    ? ($order->delivery_address ?? 'Pelanggan POS')
+                    : ($order->customer->name ?? 'Guest');
+
+                // POS orders: tidak ada driver
+                $driverName = $isPosOrder ? 'POS (Kasir)' : ($order->driver->name ?? '-');
 
                 return [
                     'id' => $order->id,
                     'time' => $order->created_at->format('H:i'),
                     'order_number' => $order->order_number,
-                    'customer_name' => $order->customer->name ?? 'Guest',
+                    'customer_name' => $customerName,
                     'summary' => $summary ?: '-',
-                    'total' => $order->total_price, // Total bayar customer
+                    'total' => $order->total_price,
                     'revenue' => $revenue,
                     'modal' => $modal,
                     'net_profit' => $netProfit,
                     'delivery_fee' => $order->delivery_fee ?? 0,
-                    'driver_name' => $order->driver->name ?? '-',
+                    'driver_name' => $driverName,
                     'status' => $order->status,
+                    'source' => $isPosOrder ? 'pos' : 'online',
                 ];
             });
 

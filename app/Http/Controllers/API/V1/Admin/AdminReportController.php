@@ -20,7 +20,7 @@ class AdminReportController extends Controller
 
         $query = Order::with(['items.product', 'user', 'outlet', 'driver'])
             ->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
-            ->where('order_number', 'not like', 'POS-%');
+            ->where('order_number', 'like', 'POS-%');
 
         if ($outletId !== 'all') {
             $query->where('outlet_id', $outletId);
@@ -63,7 +63,12 @@ class AdminReportController extends Controller
             foreach ($order->items as $item) {
                 $modal += ($item->product ? $item->product->cost_price : 0) * ($item->quantity ?? 1);
             }
-            
+
+            $isPosOrder = str_starts_with($order->order_number ?? '', 'POS-');
+            $customerName = $isPosOrder
+                ? ($order->delivery_address ?? 'Pelanggan POS')
+                : ($order->customer->name ?? 'Guest');
+
             return [
                 'id' => $order->id,
                 'order_number' => $order->order_number,
@@ -76,7 +81,7 @@ class AdminReportController extends Controller
                 'cogs_est' => $modal,
                 'gross_profit_est' => $order->subtotal - $modal,
                 'status' => $order->status,
-                'user' => ['name' => $order->customer->name ?? 'Guest'],
+                'user' => ['name' => $customerName],
                 'outlet' => ['name' => $order->outlet->name ?? 'Unknown'],
             ];
         })->values();
