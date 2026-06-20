@@ -34,6 +34,9 @@ class User extends Authenticatable
     'wallet_balance',
     'profile_image',
     'status',
+    'current_latitude',
+    'current_longitude',
+    'location_updated_at',
 ];
 
     /**
@@ -83,5 +86,13 @@ class User extends Authenticatable
     public function deliveries()
     {
         return $this->hasMany(Order::class, 'driver_id');
+    }
+
+    /**
+     * Get driver location history
+     */
+    public function locations()
+    {
+        return $this->hasMany(DriverLocation::class, 'driver_id');
     }
 }

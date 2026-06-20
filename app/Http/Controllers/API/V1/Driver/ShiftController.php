@@ -148,6 +148,9 @@ class ShiftController extends Controller
             'delivered_at' => now(),
         ]);
 
+        // Cleanup driver_locations for this order
+        \App\Models\DriverLocation::where('order_id', $order->id)->delete();
+
         // Tambahkan ongkir (delivery_fee) ke saldo (wallet_balance) driver
         $user->wallet_balance = ($user->wallet_balance ?? 0) + $order->delivery_fee;
         $user->save();

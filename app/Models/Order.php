@@ -92,4 +92,12 @@ class Order extends Model
     {
         return $this->status !== 'on_delivery' && $this->status !== 'completed';
     }
+
+    /**
+     * Get driver location history for this order
+     */
+    public function driverLocations(): HasMany
+    {
+        return $this->hasMany(\App\Models\DriverLocation::class, 'order_id');
+    }
 }

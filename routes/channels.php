@@ -18,3 +18,11 @@ Broadcast::channel('chat.transaction.{transactionId}', function ($user, $transac
     // Order uses user_id for the customer (not customer_id)
     return $user->id === $order->user_id || $user->id === $order->driver_id;
 });
+
+// Channel private untuk real-time tracking driver
+Broadcast::channel('order.{orderId}.tracking', function ($user, $orderId) {
+    $order = \App\Models\Order::find($orderId);
+    if (!$order) return false;
+    // Hanya customer yang pesan & driver yang mengantar
+    return $user->id === $order->user_id || $user->id === $order->driver_id;
+});

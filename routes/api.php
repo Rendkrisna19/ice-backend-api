@@ -8,6 +8,7 @@ use App\Http\Controllers\API\V1\ProductController;
 use App\Http\Controllers\API\V1\Customer\OrderController as CustomerOrderController;
 use App\Http\Controllers\API\V1\Merchant\OrderController as MerchantOrderController;
 use App\Http\Controllers\API\V1\Driver\ShiftController;
+use App\Http\Controllers\API\V1\Driver\LocationController;
 use App\Http\Controllers\API\V1\Admin\ManagementController;
 use App\Http\Controllers\API\V1\Admin\AdminReportController;
 use App\Http\Controllers\API\V1\Merchant\ProductController as MerchantProductController;
@@ -67,6 +68,9 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
         Route::get('/orders/{order}', [CustomerOrderController::class, 'show']);
         Route::post('/orders/{order}/cancel', [CustomerOrderController::class, 'cancel']);
         Route::get('/outlets/{outlet}/products', [CustomerOrderController::class, 'getOutletProducts']);
+
+        // REAL-TIME TRACKING
+        Route::get('/tracking/{order}', [\App\Http\Controllers\API\V1\Customer\TrackingController::class, 'getTracking']);
     });
 
     // --- MERCHANT ROUTES ---
@@ -122,6 +126,10 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
         Route::post('/orders/{order}/start', [ShiftController::class, 'startDelivery']);
         Route::post('/orders/{order}/complete', [ShiftController::class, 'completeDelivery']);
         Route::post('/change-password', [ShiftController::class, 'changePassword']);
+
+        // REAL-TIME TRACKING
+        Route::post('/location', [LocationController::class, 'updateLocation']);
+        Route::get('/route/{order}', [\App\Http\Controllers\API\V1\Customer\TrackingController::class, 'getRoute']);
     });
 
     // --- ADMIN ROUTES ---
