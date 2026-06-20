@@ -33,7 +33,7 @@ class OrderController extends Controller
         }
 
         $orders = Order::where('outlet_id', $user->outlet_id)
-            ->with('items', 'customer', 'driver')
+            ->with('items', 'customer', 'driver', 'table')
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 

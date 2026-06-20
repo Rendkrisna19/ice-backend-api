@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 class Outlet extends Model
 {
@@ -51,5 +52,29 @@ class Outlet extends Model
     {
         return $this->belongsToMany(Product::class, 'outlet_product')
             ->withPivot(['price', 'is_available']);
+    }
+
+    /**
+     * Get all dining tables for this outlet
+     */
+    public function tables(): HasMany
+    {
+        return $this->hasMany(DiningTable::class);
+    }
+
+    /**
+     * Check whether the outlet is currently open (not force-closed and within operating hours)
+     */
+    public function isOpenNow(): bool
+    {
+        if ($this->is_force_closed) {
+            return false;
+        }
+
+        $currentTime = Carbon::now()->format('H:i:s');
+        $openingHour = $this->opening_hour->format('H:i:s');
+        $closingHour = $this->closing_hour->format('H:i:s');
+
+        return $currentTime >= $openingHour && $currentTime <= $closingHour;
     }
 }

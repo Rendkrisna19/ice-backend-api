@@ -12,6 +12,8 @@ class Order extends Model
         'order_number',
         'user_id',
         'outlet_id',
+        'order_type',
+        'table_id',
         'driver_id',
         'status',
         'subtotal',
@@ -60,6 +62,13 @@ class Order extends Model
 
     public function user() { return $this->belongsTo(User::class); }
 
+    /**
+     * Get the dining table this order was placed from (dine-in orders only)
+     */
+    public function table(): BelongsTo
+    {
+        return $this->belongsTo(DiningTable::class, 'table_id');
+    }
 
     /**
      * Get the driver assigned to this order

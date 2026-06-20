@@ -15,6 +15,9 @@ use App\Http\Controllers\API\V1\ProfileController;
 use App\Http\Controllers\API\V1\Merchant\ReportController;
 use App\Http\Controllers\API\V1\Merchant\PosController;
 use App\Http\Controllers\API\V1\Merchant\SettingController;
+use App\Http\Controllers\API\V1\Merchant\TableController as MerchantTableController;
+use App\Http\Controllers\API\V1\Merchant\DineInOrderController;
+use App\Http\Controllers\API\V1\Public\TableOrderController;
 
 // ==========================================
 // PUBLIC ROUTES
@@ -39,6 +42,13 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/config/pricing', function () {
         return response()->json(['data' => \App\Models\SystemConfig::getCurrent()]);
+    });
+
+    // Dine-in ordering via table QR code (guest, no login required)
+    Route::prefix('table-order')->middleware('throttle:30,1')->group(function () {
+        Route::get('/{token}', [TableOrderController::class, 'show']);
+        Route::post('/{token}/orders', [TableOrderController::class, 'store']);
+        Route::get('/{token}/orders', [TableOrderController::class, 'orders']);
     });
 });
 
@@ -110,6 +120,22 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
         //settings route merchant
         Route::get('/settings/operational-hours', [SettingController::class, 'getOperationalHours']);
         Route::put('/settings/operational-hours', [SettingController::class, 'updateOperationalHours']);
+
+        // Tables & QR Code (dine-in)
+        Route::get('/tables', [MerchantTableController::class, 'index']);
+        Route::post('/tables', [MerchantTableController::class, 'store']);
+        Route::put('/tables/{table}', [MerchantTableController::class, 'update']);
+        Route::delete('/tables/{table}', [MerchantTableController::class, 'destroy']);
+        Route::post('/tables/{table}/regenerate-qr', [MerchantTableController::class, 'regenerateQr']);
+        Route::get('/tables/{table}/bill', [MerchantTableController::class, 'bill']);
+        Route::post('/tables/{table}/close-bill', [MerchantTableController::class, 'closeBill']);
+
+        // Dine-in order management (kanban "Pesanan Masuk")
+        Route::prefix('dine-in-orders')->group(function () {
+            Route::get('/kanban', [DineInOrderController::class, 'kanban']);
+            Route::get('/counts', [DineInOrderController::class, 'counts']);
+            Route::post('/{id}/status', [DineInOrderController::class, 'updateStatus']);
+        });
     });
 
     // --- DRIVER ROUTES ---

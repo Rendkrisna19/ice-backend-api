@@ -13,6 +13,7 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
+        'https://0295-182-9-48-137.ngrok-free.app',
         'http://localhost:3000',
         'http://127.0.0.1:3000',
         'https://zadify.id',

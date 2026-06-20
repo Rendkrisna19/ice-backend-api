@@ -123,7 +123,8 @@ class PosController extends Controller
                 'order_number'      => $orderNumber,
                 'user_id'           => $user->id,
                 'outlet_id'         => $outletId,
-                'status'            => 'pending', 
+                'order_type'        => 'pos',
+                'status'            => 'pending',
                 'subtotal'          => $request->subtotal,
                 'tax'               => ($request->subtotal * $taxConfig) / 100,
                 'total_price'       => $request->subtotal + (($request->subtotal * $taxConfig) / 100),
@@ -168,11 +169,10 @@ class PosController extends Controller
                     return response()->json(['message' => 'Pesanan tidak ditemukan'], 404);
                 }
 
-                // Update status HANYA untuk kolom yang pasti ada (status dan payment_method)
-                // Jika error masih terjadi setelah ini, berarti tabel 'orders' kamu tidak memiliki kolom 'payment_method'
                 $order->update([
                     'status' => 'completed',
-                    'payment_method' => $request->payment_method ?? 'tunai',
+                    'paid_at' => now(),
+                    'completed_at' => now(),
                 ]);
 
                 return response()->json([
