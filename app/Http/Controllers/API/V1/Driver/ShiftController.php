@@ -83,6 +83,13 @@ class ShiftController extends Controller
             ->orderBy('created_at', 'asc') 
             ->get();
 
+        // Tambahkan outlet_lat dan outlet_lng ke setiap order
+        $activeOrders->transform(function ($order) {
+            $order->outlet_latitude = $order->outlet->latitude ?? null;
+            $order->outlet_longitude = $order->outlet->longitude ?? null;
+            return $order;
+        });
+
         return $this->successResponse($activeOrders, 'Active jobs retrieved');
     }
 

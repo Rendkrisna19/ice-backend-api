@@ -47,22 +47,35 @@ class TrackingController extends Controller
             ->limit(50)
             ->get(['latitude', 'longitude', 'recorded_at']);
 
-        // Hitung ETA
-        $eta = $this->calculateETA(
-            $driver->current_latitude ?? 0,
-            $driver->current_longitude ?? 0,
-            $order->delivery_latitude ?? 0,
-            $order->delivery_longitude ?? 0
-        );
+        // Tentukan posisi driver: gunakan current_latitude jika ada, fallback ke outlet
+        $driverLat = (float) ($driver->current_latitude ?? 0);
+        $driverLng = (float) ($driver->current_longitude ?? 0);
+        
+        // Jika driver belum punya lokasi, gunakan posisi outlet sebagai fallback
+        if ($driverLat == 0 || $driverLng == 0) {
+            $driverLat = (float) ($order->outlet->latitude ?? 0);
+            $driverLng = (float) ($order->outlet->longitude ?? 0);
+        }
 
-        // Ambil rute dari OSRM (gratis)
-        $routePolyline = null;
-        if ($driver->current_latitude && $driver->current_longitude 
-            && $order->delivery_latitude && $order->delivery_longitude) {
-            $routePolyline = $this->getOSRMRoute(
-                $driver->current_longitude, $driver->current_latitude,
-                $order->delivery_longitude, $order->delivery_latitude
-            );
+        $destLat = (float) ($order->delivery_latitude ?? 0);
+        $destLng = (float) ($order->delivery_longitude ?? 0);
+
+        // Hitung ETA + Rute menggunakan OSRM (real driving route)
+        $routeData = null;
+        $etaMinutes = 0;
+        $distanceKm = 0;
+        
+        if ($driverLat != 0 && $driverLng != 0 && $destLat != 0 && $destLng != 0) {
+            $routeData = $this->getOSRMRouteFull($driverLng, $driverLat, $destLng, $destLat);
+            $etaMinutes = $routeData['duration_minutes'];
+            $distanceKm = $routeData['distance_km'];
+        }
+
+        // Fallback ke Haversine jika OSRM gagal
+        if ($etaMinutes == 0 && $driverLat != 0 && $destLat != 0) {
+            $fallback = $this->calculateETA($driverLat, $driverLng, $destLat, $destLng);
+            $etaMinutes = $fallback['minutes'];
+            $distanceKm = $fallback['distance_km'];
         }
 
         return $this->successResponse([
@@ -71,10 +84,11 @@ class TrackingController extends Controller
                 'id' => $driver->id,
                 'name' => $driver->name,
                 'phone' => $driver->phone,
+                'photo' => $driver->profile_image ? url($driver->profile_image) : null,
                 'vehicle_type' => $driver->vehicle_type ?? 'motor',
                 'plate_number' => $driver->plate_number ?? '-',
-                'current_latitude' => (float) ($driver->current_latitude ?? 0),
-                'current_longitude' => (float) ($driver->current_longitude ?? 0),
+                'current_latitude' => $driverLat,
+                'current_longitude' => $driverLng,
                 'location_updated_at' => $driver->location_updated_at,
             ],
             'outlet' => [
@@ -84,12 +98,12 @@ class TrackingController extends Controller
             ],
             'destination' => [
                 'address' => $order->delivery_address,
-                'latitude' => (float) ($order->delivery_latitude ?? 0),
-                'longitude' => (float) ($order->delivery_longitude ?? 0),
+                'latitude' => $destLat,
+                'longitude' => $destLng,
             ],
-            'eta_minutes' => $eta['minutes'],
-            'distance_remaining_km' => $eta['distance_km'],
-            'route_polyline' => $routePolyline,
+            'eta_minutes' => $etaMinutes,
+            'distance_remaining_km' => $distanceKm,
+            'route_polyline' => $routeData ? json_encode($routeData['coordinates']) : null,
             'location_history' => $locationHistory->map(function ($loc) {
                 return [
                     'latitude' => (float) $loc->latitude,

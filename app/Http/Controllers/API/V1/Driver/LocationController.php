@@ -62,27 +62,40 @@ class LocationController extends Controller
             'recorded_at' => now(),
         ]);
 
-        // 3. Hitung ETA & jarak sisa
-        $eta = $this->calculateETA(
+        // 3. Hitung ETA & jarak sisa menggunakan OSRM (real driving route)
+        $eta = $this->calculateETAFromOSRM(
             $validated['latitude'],
             $validated['longitude'],
             $order->delivery_latitude,
-            $order->delivery_longitude,
-            $validated['speed'] ?? 25
+            $order->delivery_longitude
         );
 
-        // 4. Broadcast ke customer via WebSocket (Laravel Reverb)
-        broadcast(new DriverLocationUpdated([
-            'driver_id' => $user->id,
-            'order_id' => $validated['order_id'],
-            'latitude' => $validated['latitude'],
-            'longitude' => $validated['longitude'],
-            'speed' => $validated['speed'] ?? null,
-            'heading' => $validated['heading'] ?? null,
-            'eta_minutes' => $eta['minutes'],
-            'distance_remaining' => $eta['distance_km'],
-            'recorded_at' => now()->toISOString(),
-        ]));
+        // Fallback ke Haversine jika OSRM gagal
+        if ($eta === null) {
+            $eta = $this->calculateETA(
+                $validated['latitude'],
+                $validated['longitude'],
+                $order->delivery_latitude,
+                $order->delivery_longitude,
+                $validated['speed'] ?? 25
+            );
+        }
+
+        // 4. Broadcast ke customer (optional, skip jika tidak dikonfigurasi)
+        try {
+            if (class_exists(\App\Events\DriverLocationUpdated::class)) {
+                broadcast(new \App\Events\DriverLocationUpdated([
+                    'driver_id' => $user->id,
+                    'order_id' => $validated['order_id'],
+                    'latitude' => $validated['latitude'],
+                    'longitude' => $validated['longitude'],
+                    'eta_minutes' => $eta['minutes'],
+                    'distance_remaining' => $eta['distance_km'],
+                ]));
+            }
+        } catch (\Exception $e) {
+            // Skip broadcast jika belum dikonfigurasi (Hostinger shared hosting)
+        }
 
         return $this->successResponse([
             'eta_minutes' => $eta['minutes'],
@@ -115,5 +128,33 @@ class LocationController extends Controller
             'minutes' => max(1, (int) round($etaMinutes)),
             'distance_km' => round($distance, 2),
         ];
+    }
+
+    /**
+     * Hitung ETA menggunakan OSRM (real driving route)
+     * Lebih akurat dari Haversine karena mengikuti jalan raya
+     */
+    private function calculateETAFromOSRM(float $driverLat, float $driverLng, float $destLat, float $destLng): ?array
+    {
+        try {
+            $url = "https://router.project-osrm.org/route/v1/driving/"
+                . "{$driverLng},{$driverLat};{$destLng},{$destLat}"
+                . "?overview=false";
+
+            $response = @file_get_contents($url);
+            if ($response === false) return null;
+
+            $data = json_decode($response, true);
+            if (!isset($data['routes'][0])) return null;
+
+            $route = $data['routes'][0];
+
+            return [
+                'minutes' => max(1, (int) round($route['duration'] / 60)),
+                'distance_km' => round($route['distance'] / 1000, 2),
+            ];
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 }
