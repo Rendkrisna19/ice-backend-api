@@ -84,7 +84,7 @@ class TrackingController extends Controller
                 'id' => $driver->id,
                 'name' => $driver->name,
                 'phone' => $driver->phone,
-                'photo' => $driver->profile_image ? url($driver->profile_image) : null,
+                'photo' => $driver->profile_image ? (str_starts_with($driver->profile_image, 'storage/') ? url($driver->profile_image) : url('storage/' . $driver->profile_image)) : null,
                 'vehicle_type' => $driver->vehicle_type ?? 'motor',
                 'plate_number' => $driver->plate_number ?? '-',
                 'current_latitude' => $driverLat,

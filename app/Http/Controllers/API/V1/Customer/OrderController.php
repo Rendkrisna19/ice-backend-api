@@ -97,6 +97,14 @@ class OrderController extends Controller
 
         $order->load(['items.product', 'outlet', 'driver']);
 
+        if ($order->driver) {
+            $order->driver->photo = $order->driver->profile_image 
+                ? (str_starts_with($order->driver->profile_image, 'storage/') 
+                    ? url($order->driver->profile_image) 
+                    : url('storage/' . $order->driver->profile_image)) 
+                : null;
+        }
+
         return $this->successResponse($order, 'Order retrieved successfully');
     }
 
