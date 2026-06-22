@@ -43,6 +43,7 @@ class ChatController extends Controller
                 'customer_name' => $customer ? $customer->name : null,
                 'driver_id' => $driver ? $driver->id : null,
                 'driver_name' => $driver ? $driver->name : null,
+                'driver_phone' => $driver ? $driver->phone : null,
                 'driver_plate_number' => $driver ? $driver->plate_number : null,
                 'driver_vehicle_type' => $driver ? $driver->vehicle_type : null,
             ];
