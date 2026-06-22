@@ -199,7 +199,7 @@ class ShiftController extends Controller
                 'phone' => $phone, 
                 'plate_number' => $plate,
                 'wallet_balance' => $wallet,
-                'profile_image' => $user->profile_image ? url('storage/' . $user->profile_image) : null,
+                'profile_image' => $user->profile_image ? (str_starts_with($user->profile_image, 'storage/') ? url($user->profile_image) : url('storage/' . $user->profile_image)) : null,
                 'rating' => 4.8, 
                 'join_date' => $user->created_at ? $user->created_at->format('Y') : date('Y'),
             ], 'Driver status retrieved');
