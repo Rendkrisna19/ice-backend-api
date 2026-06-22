@@ -252,6 +252,10 @@ class AuthController extends Controller
             return $this->errorResponse('OTP tidak valid.', 422);
         }
 
+        if (Hash::check($validated['password'], $user->password)) {
+            return $this->errorResponse('Password baru tidak boleh sama dengan password sebelumnya.', 422);
+        }
+
         $user->update([
             'password' => Hash::make($validated['password']),
         ]);
