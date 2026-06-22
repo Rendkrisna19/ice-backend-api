@@ -204,9 +204,15 @@ class OrderService
             return $order->snap_token;
         }
 
-        $serverKey = env('MIDTRANS_SERVER_KEY');
+        $serverKey = env('MIDTRANS_SERVER_KEY', '');
         $isProduction = env('MIDTRANS_IS_PRODUCTION', false);
         $url = $isProduction ? 'https://app.midtrans.com/snap/v1/transactions' : 'https://app.sandbox.midtrans.com/snap/v1/transactions';
+
+        // Jika tidak ada server key, langsung return null (atau bisa lempar error)
+        if (empty($serverKey)) {
+            \Illuminate\Support\Facades\Log::warning('Midtrans Server Key is empty. Snap Token not generated.');
+            return null;
+        }
 
         $payload = [
             'transaction_details' => [
@@ -221,7 +227,7 @@ class OrderService
         ];
 
         try {
-            $response = \Illuminate\Support\Facades\Http::withBasicAuth($serverKey, '')
+            $response = \Illuminate\Support\Facades\Http::withBasicAuth((string)$serverKey, '')
                 ->post($url, $payload);
 
             if ($response->successful()) {

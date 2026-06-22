@@ -355,6 +355,13 @@ class OrderController extends Controller
 
         $orders = Order::where('outlet_id', $user->outlet_id)
             ->whereIn('status', $activeStatuses)
+            ->where(function($q) {
+                $q->where('payment_method', 'cod')
+                  ->orWhere(function($sq) {
+                      $sq->where('payment_method', 'online')
+                         ->where('payment_status', 'paid');
+                  });
+            })
             ->with(['items', 'customer', 'driver' => function ($q) {
                 // UBAH 'phone' JADI 'phone_number'
                 $q->select('id', 'name', 'phone', 'plate_number');
@@ -386,6 +393,13 @@ class OrderController extends Controller
         }
 
         $counts = Order::where('outlet_id', $user->outlet_id)
+            ->where(function($q) {
+                $q->where('payment_method', 'cod')
+                  ->orWhere(function($sq) {
+                      $sq->where('payment_method', 'online')
+                         ->where('payment_status', 'paid');
+                  });
+            })
             ->selectRaw('status, count(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status')
