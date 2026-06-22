@@ -71,6 +71,9 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 
         // REAL-TIME TRACKING
         Route::get('/tracking/{order}', [\App\Http\Controllers\API\V1\Customer\TrackingController::class, 'getTracking']);
+        
+        // PAYMENT SIMULATION (For Sandbox Testing)
+        Route::post('/orders/{order}/simulate-payment', [CustomerOrderController::class, 'simulatePayment']);
     });
 
     // --- MERCHANT ROUTES ---

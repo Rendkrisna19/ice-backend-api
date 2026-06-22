@@ -24,6 +24,9 @@ class Order extends Model
         'delivery_longitude',
         'paid_at',
         'completed_at',
+        'payment_method',
+        'payment_status',
+        'snap_token',
         // --- TAMBAHAN WAJIB UTK DRIVER APP ---
         'picked_up_at',      // Waktu driver ambil barang
         'delivered_at',      // Waktu driver sampai

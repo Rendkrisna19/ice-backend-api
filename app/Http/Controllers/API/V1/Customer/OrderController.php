@@ -38,6 +38,7 @@ class OrderController extends Controller
             'delivery_latitude' => 'nullable|numeric',
             'delivery_longitude' => 'nullable|numeric',
             'distance_real' => 'nullable|numeric|min:0',
+            'payment_method' => 'nullable|string|in:cod,online',
         ]);
 
         // [DEBUG] Cek apakah validasi bisnis logic lulus
@@ -59,6 +60,11 @@ class OrderController extends Controller
 
             // Panggil Service
             $order = $this->orderService->createOrder($validated, $items);
+
+            // Jika metode pembayaran adalah online, generate Snap Token
+            if ($order->payment_method === 'online') {
+                $this->orderService->generateMidtransSnapToken($order);
+            }
 
             return $this->successResponse(
                 $order->load('items', 'outlet'), 
@@ -172,6 +178,30 @@ class OrderController extends Controller
             return $this->successResponse($products, 'Products retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse('Gagal memuat produk: ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Simulate Payment Success (For Testing / Sandbox)
+     */
+    public function simulatePayment(Order $order)
+    {
+        if ($order->user_id !== auth()->id()) {
+            return $this->errorResponse('Unauthorized', 403);
+        }
+
+        if ($order->payment_method !== 'online') {
+            return $this->errorResponse('Order is not using online payment', 400);
+        }
+
+        try {
+            $this->orderService->markAsPaid($order);
+            // Optionally, update payment_status to 'paid'
+            $order->update(['payment_status' => 'paid']);
+
+            return $this->successResponse($order->refresh(), 'Payment simulated successfully');
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
         }
     }
 }

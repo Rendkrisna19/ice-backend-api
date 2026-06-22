@@ -61,6 +61,8 @@ class OrderService
             'delivery_address'   => $data['delivery_address'],
             'delivery_latitude'  => $data['delivery_latitude']  ?? null,
             'delivery_longitude' => $data['delivery_longitude'] ?? null,
+            'payment_method'     => $data['payment_method'] ?? 'cod',
+            'payment_status'     => 'unpaid',
         ]);
 
         // Create order items dengan snapshot harga
@@ -191,5 +193,46 @@ class OrderService
         }
 
         return $order;
+    }
+
+    /**
+     * Generate Midtrans Snap Token
+     */
+    public function generateMidtransSnapToken(Order $order): ?string
+    {
+        if ($order->snap_token) {
+            return $order->snap_token;
+        }
+
+        $serverKey = env('MIDTRANS_SERVER_KEY');
+        $isProduction = env('MIDTRANS_IS_PRODUCTION', false);
+        $url = $isProduction ? 'https://app.midtrans.com/snap/v1/transactions' : 'https://app.sandbox.midtrans.com/snap/v1/transactions';
+
+        $payload = [
+            'transaction_details' => [
+                'order_id' => $order->order_number,
+                'gross_amount' => (int) $order->total_price,
+            ],
+            'customer_details' => [
+                'first_name' => $order->user->name ?? 'Customer',
+                'email' => $order->user->email ?? 'customer@example.com',
+                'phone' => $order->user->phone ?? '081234567890',
+            ]
+        ];
+
+        try {
+            $response = \Illuminate\Support\Facades\Http::withBasicAuth($serverKey, '')
+                ->post($url, $payload);
+
+            if ($response->successful()) {
+                $snapToken = $response->json('token');
+                $order->update(['snap_token' => $snapToken]);
+                return $snapToken;
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Midtrans Error: ' . $e->getMessage());
+        }
+
+        return null;
     }
 }
