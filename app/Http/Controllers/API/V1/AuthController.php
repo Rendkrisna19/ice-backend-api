@@ -179,4 +179,85 @@ class AuthController extends Controller
 
         return $this->successResponse(null, 'Akun berhasil dihapus.');
     }
+
+    /**
+     * Request OTP for Password Reset (Khusus Customer)
+     */
+    public function requestPasswordResetOtp(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => 'required|string|email',
+        ]);
+
+        $email = Str::lower($validated['email']);
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            return $this->errorResponse('Email tidak terdaftar.', 404);
+        }
+
+        if ($user->role !== 'customer') {
+            return $this->errorResponse('Reset password hanya tersedia untuk akun customer.', 403);
+        }
+
+        $otp = (string) random_int(100000, 999999);
+        $expiresAt = now()->addMinutes(10);
+
+        EmailOtp::updateOrCreate(
+            ['email' => $email],
+            [
+                'code_hash' => Hash::make($otp),
+                'expires_at' => $expiresAt,
+            ]
+        );
+
+        Mail::to($email)->send(new \App\Mail\PasswordResetOtpMail($otp));
+
+        return $this->successResponse([
+            'email' => $email,
+            'expires_at' => $expiresAt,
+        ], 'OTP terkirim ke email Anda.', 200);
+    }
+
+    /**
+     * Verify OTP and Reset Password (Khusus Customer)
+     */
+    public function verifyPasswordResetOtp(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => 'required|string|email',
+            'otp' => 'required|string|size:6',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $email = Str::lower($validated['email']);
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            return $this->errorResponse('Email tidak ditemukan.', 404);
+        }
+
+        $otpRecord = EmailOtp::where('email', $email)->first();
+
+        if (!$otpRecord) {
+            return $this->errorResponse('OTP belum diminta atau sudah digunakan.', 422);
+        }
+
+        if ($otpRecord->expires_at->isPast()) {
+            $otpRecord->delete();
+            return $this->errorResponse('OTP sudah kedaluwarsa.', 422);
+        }
+
+        if (!Hash::check($validated['otp'], $otpRecord->code_hash)) {
+            return $this->errorResponse('OTP tidak valid.', 422);
+        }
+
+        $user->update([
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        $otpRecord->delete();
+
+        return $this->successResponse(null, 'Password berhasil diubah. Silakan login kembali.', 200);
+    }
 }

@@ -25,6 +25,8 @@ Route::prefix('v1')->group(function () {
     Route::post('/auth/register/request-otp', [AuthController::class, 'requestRegisterOtp']);
     Route::post('/auth/register/verify-otp', [AuthController::class, 'verifyRegisterOtp']);
     Route::post('/auth/login', [AuthController::class, 'login']);
+    Route::post('/auth/forgot-password/request', [AuthController::class, 'requestPasswordResetOtp']);
+    Route::post('/auth/forgot-password/verify', [AuthController::class, 'verifyPasswordResetOtp']);
 
     Route::get('/outlets', [OutletController::class, 'index']);
     Route::get('/outlets/search', [OutletController::class, 'search']);
