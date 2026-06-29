@@ -125,8 +125,12 @@ class AuthController extends Controller
 
         $user = User::where('email', $validated['email'])->first();
 
-        if (!$user || !Hash::check($validated['password'], $user->password)) {
-            return $this->errorResponse('Email atau password Anda salah', 401);
+        if (!$user) {
+            return $this->errorResponse('Email Anda salah atau belum terdaftar.', 404);
+        }
+
+        if (!Hash::check($validated['password'], $user->password)) {
+            return $this->errorResponse('Password yang Anda masukkan salah.', 401);
         }
 
         // Cek apakah akun diblokir
