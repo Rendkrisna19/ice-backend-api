@@ -222,6 +222,7 @@ class ManagementController extends Controller
             'longitude' => 'sometimes|nullable|numeric',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'banner' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'password' => 'nullable|string|min:6',
         ]);
 
         // Handle File Update (storage public)
@@ -235,6 +236,15 @@ class ManagementController extends Controller
         }
 
         $outlet->update($validated);
+
+        if ($request->filled('password')) {
+            $merchantUser = User::where('outlet_id', $outlet->id)->first();
+            if ($merchantUser) {
+                $merchantUser->update([
+                    'password' => Hash::make($request->password)
+                ]);
+            }
+        }
 
         return $this->successResponse($outlet, 'Outlet updated successfully');
     }
